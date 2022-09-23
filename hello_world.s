@@ -1,20 +1,18 @@
-.data
-string: .asciz "Azeria_Labs\n"  @ .asciz adds a null-byte to the end of the string
-after_string:
-.set size_of_string, after_string - string
-
-.text
+.section .text
 .global _start
 
+
 _start:
-   mov r0, #1               @ STDOUT
-   ldr r1, addr_of_string   @ memory address of string
-   mov r2, #size_of_string  @ size of string
+   .code 32
+   add r3, pc, #1
+   bx r3
+
+   .code 16
+   eor r0, r0, r0               @ STDOUT
+   add r1, pc, #8   @ memory address of string
+   mov r2, #13              @ size of string
    mov r7, #4               @ write syscall
-   swi #0                   @ invoke syscall
-
-_exit:
-   mov r7, #1               @ exit syscall
-   swi 0                    @ invoke syscall
-
-addr_of_string: .word string
+   svc #1                   @ invoke syscall
+   mov r7, #1
+   svc #1
+.ascii "Hello_World!"
